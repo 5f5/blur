@@ -53,12 +53,13 @@ int gui::run() {
 					// 	break;
 
 				case SDL_EVENT_DROP_FILE: {
-					std::vector<std::filesystem::path> paths = { u::string_to_path(event.drop.data) };
-					if (paths[0].extension() == ".cfg") {
-						u::log("loading config: {}", paths[0]);
+					std::filesystem::path path = u::string_to_path(event.drop.data);
+
+					if (path.extension() == ".cfg") {
+						u::log("loading config: {}", path);
 			
 						try {
-							const auto file_settings = config_blur::parse(paths[0]);
+							const auto file_settings = config_blur::parse(path);
 						
 							ui::reset_tied_sliders();
 							gui::components::configs::settings = file_settings;
@@ -87,13 +88,13 @@ int gui::run() {
 						auto sample_video_path = blur.settings_path / "sample_video.mp4";
 						bool sample_video_exists = std::filesystem::exists(sample_video_path);
 						if (!sample_video_exists) {
-							tasks::add_sample_video(paths[0]);
+							tasks::add_sample_video(path);
 
 							break;
 						}
 					}
 
-					tasks::add_files(paths);
+					tasks::add_files({ path });
 
 					break;
 				}
