@@ -63,10 +63,11 @@ int gui::run() {
 						
 							ui::reset_tied_sliders();
 							gui::components::configs::settings = file_settings;
-						
-							if (gui::renderer::screen == gui::renderer::Screens::MAIN) {
-								components::configs::dragged_config = true;
-							}
+
+							gui::components::configs::loaded_config = true;
+							gui::components::configs::should_load_config = false;
+
+							gui::renderer::screen = gui::renderer::Screens::CONFIG;
 
 							gui::components::notifications::add(
 								"Imported config", ui::NotificationType::INFO, {}, std::chrono::duration<float>(2.f)

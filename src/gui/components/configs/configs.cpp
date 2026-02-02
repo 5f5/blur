@@ -21,20 +21,10 @@ void configs::screen(
 			loading_config = true;
 
 			std::thread([] {
-				if (!dragged_config) {
-					ui::reset_tied_sliders();
-
-					settings = config_blur::parse_global_config();
-					app_settings = config_app::get_app_config();
-					on_load();
-				}
-				// if we have a dragged config loaded, don't override loaded settings with global cfg
-				else {
-					current_global_settings = config_blur::parse_global_config();
-					parse_interp();
-					current_app_settings = config_app::get_app_config();
-				}
-
+				ui::reset_tied_sliders();
+				settings = config_blur::parse_global_config();
+				app_settings = config_app::get_app_config();
+				on_load();
 				loading_config = false;
 				loaded_config = true;
 			}).detach();
@@ -59,20 +49,18 @@ void configs::screen(
 		app_settings.rife_gpu_index; // the default config has uninitialised rife gpu, use index from current cfg to
 	                                 // prevent restore default from always showing up
 
-	bool config_changed = settings != current_global_settings || app_settings != current_app_settings || dragged_config;
+	bool config_changed = settings != current_global_settings || app_settings != current_app_settings;
 	bool config_not_default = settings != config_blur::DEFAULT_CONFIG || app_settings != modified_default_app;
 
 	if (config_changed) {
 		ui::set_next_same_line(nav_container);
 		ui::add_button("save button", nav_container, "Save", fonts::dejavu, [&] {
-			dragged_config = false;
 			save_config();
 		});
 
 		ui::set_next_same_line(nav_container);
 		ui::add_button("reset changes button", nav_container, "Reset changes", fonts::dejavu, [&] {
 			ui::reset_tied_sliders();
-			dragged_config = false;
 			settings = current_global_settings;
 			app_settings = current_app_settings;
 			on_load();
@@ -83,7 +71,6 @@ void configs::screen(
 		ui::set_next_same_line(nav_container);
 		ui::add_button("restore defaults button", nav_container, "Restore defaults", fonts::dejavu, [] {
 			ui::reset_tied_sliders();
-			dragged_config = false;
 			settings = config_blur::DEFAULT_CONFIG;
 			app_settings = config_app::DEFAULT_CONFIG;
 			parse_interp();

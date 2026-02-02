@@ -147,6 +147,10 @@ bool gui::renderer::redraw_window(bool rendered_last, bool want_to_render) {
 			break;
 		}
 		case Screens::MAIN: {
+			if (components::configs::should_load_config) {
+				components::configs::loaded_config = false;
+			}
+
 			auto main_screen = components::main::screen(main_container, delta_time);
 
 			if (initialisation_res) {
@@ -225,10 +229,10 @@ bool gui::renderer::redraw_window(bool rendered_last, bool want_to_render) {
 			break;
 		}
 		case Screens::CONFIG: {
+			components::configs::should_load_config = true;
+
 			ui::set_next_same_line(nav_container);
 			ui::add_button("back button", nav_container, "Back", fonts::dejavu, [] {
-				components::configs::loaded_config = false;
-				components::configs::dragged_config = false;
 				screen = Screens::MAIN;
 			});
 
