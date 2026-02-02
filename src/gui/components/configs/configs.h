@@ -17,7 +17,7 @@ namespace gui::components::configs { // naming it configs to avoid conflict with
 	inline GlobalAppSettings current_app_settings;
 
 	inline bool loaded_config = false;
-	inline bool loading_config = false;
+	inline bool dragged_config = false;
 
 	inline bool interpolate_scale = true;
 	inline float interpolated_fps_mult = 5.f;
